@@ -7,6 +7,7 @@ const detect = require('./utils/detect');
 const Utils = require('./utils/domUtils');
 const Emoji = require('./plugins/emojis');
 const hanabi = require('hanabi');
+const entities = require("entities");
 const LINKREG = /^https?\:\/\//;
 const AVSdkUri = '//cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js';
 const defaultComment = {
@@ -15,7 +16,8 @@ const defaultComment = {
     mail: '',
     link: '',
     ua: navigator.userAgent,
-    url: ''
+    url: '',
+    raw: ''
 };
 const locales = {
     'zh-cn': {
@@ -601,6 +603,7 @@ ValineFactory.prototype.bind = function (option) {
         _el.value = _val;
         let ret = xssFilter(marked(_val));
         defaultComment[_v] = ret;
+        defaultComment['raw'] = entities.decodeHTML(_val);
         _vpreview.innerHTML = ret;
         if (_val) autosize(_el);
         else autosize.destroy(_el)
